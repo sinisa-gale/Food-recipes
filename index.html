@@ -18,20 +18,22 @@
         	<h1>Search recipe</h1>
         	<section id="food-form">
         		<input class="keyword-input" type="text" name="q" placeholder="Keyword" />
-        		<select name="health">
+        		<select class="health" name="health">
         			<option value="" disabled selected>HEALTH</option>
                     <option value="alcohol-free">Alcohol free</option>
                     <option value="vegan">Vegan</option>
                     <option value="vegetarian">Vegetarian</option>
                     <option value="peanut-free">Peanuts</option>
         		</select>
-                <select name="diet">
+                <select class="diet" name="diet">
                     <option value="" disabled selected>DIET</option>
                     <option value="balanced">Balanced</option>
                     <option value="high-protein">High-Protein</option>
                     <option value="low-carb">Low-Carb</option>
                     <option value="low-fat">Low-Fat</option>
                 </select>
+                <input class="cal" type="text" name="c1" placeholder="CALORIES MIN" />
+                <input class="cal" type="text" name="c2" placeholder="CALORIES MAX" />
         		<button class="search-button" disabled>Search</button>
         	</section>
         	<div class="loader"></div>
