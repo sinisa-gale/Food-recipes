@@ -32,11 +32,13 @@
                     <option value="low-carb">Low-Carb</option>
                     <option value="low-fat">Low-Fat</option>
                 </select>
-                <input class="cal" type="text" name="c1" placeholder="CALORIES MIN" />
-                <input class="cal" type="text" name="c2" placeholder="CALORIES MAX" />
+                <input class="calories" type="text" name="c1" placeholder="CALORIES MIN" />
+                <input class="calories" type="text" name="c2" placeholder="CALORIES MAX" />
         		<button class="search-button" disabled>Search</button>
         	</section>
-        	<div class="loader"></div>
+        	<div class="loader">
+                <img id="load" src="img/loader.gif">   
+            </div>
         	<section id="recipes"></section>
         </main>
 
