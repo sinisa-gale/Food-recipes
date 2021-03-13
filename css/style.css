@@ -102,6 +102,10 @@ main {
 	width: 60px;
 }
 
+#load {
+    display:none;
+}
+
 #food-form {
 	display: flex;
     flex-direction: column;
