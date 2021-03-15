@@ -55,7 +55,7 @@ function addRecipes(recipeData) {
 		var label = '<div class="label">' + item + '</div>';
 		labels += label;	
 	})
-	
+
 	labels = labels + '</div>';
 	var calories = '<div class="calories">' +  Math.round(recipeData.calories / recipeData.yield) + '</div>';
 	recipeElement.innerHTML = img + title + labels + calories;
@@ -91,5 +91,5 @@ calMin.addEventListener('keyup', function() {
 searchButton.addEventListener("click", function() {
 	recipesList.innerHTML = '';
 	document.getElementById("load").style.display = "block"; 
-	getRecipes(foodValue, 0, 12);
+	getRecipes(foodValue, 0, 10);
 });
