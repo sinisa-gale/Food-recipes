@@ -78,7 +78,7 @@ header .wrapper {
     margin-left: 10px;
 	color: #666;
 	font-size: 12px;
-} 
+}
 
 /* MAIN */
 
@@ -210,7 +210,7 @@ main {
 
 /* PLACEHOLDER STYLE */
 
-*::-webkit-input-placeholder { 
+*::-webkit-input-placeholder {
   text-transform: uppercase;
   color: #ccc;
 }
@@ -225,7 +225,7 @@ main {
   color: #ccc;
 }
 
-*:-moz-placeholder { 
+*:-moz-placeholder {
   text-transform: uppercase;
   color: #ccc;
 }
@@ -233,36 +233,44 @@ main {
 
 /*PAGINATION STYLING*/
 .pagination {
+		display: flex;
     width: 410px;
     height: 20px;
+    justify-content: center;
+    align-items: center;
     margin: 0 auto;
 }
 
-.page {
-  color: black;
-  float: left;
-  padding: 8px 16px;
-  background-color: #FFA500;
-  transition: background-color .3s;
-  margin: 0 5px;
+.pagination span {
+    display: inline-block;
+    margin: 3px;
+    padding-top: 5px;
+    height: 30px;
+    width: 30px;
+    border: 1px solid #BCA7A7;
+    text-align: center;
+    cursor: pointer;
+    color: orange;
+    background-color: #FFF;
+    border-radius: 6px;
 }
 
-.pagination div.active {
-  background-color: #7ACA25;
-  color: white;
+.pagination span:hover {
+    background-color: #CCC;
+    color: #FFF;
 }
 
-.pagination div:hover:not(.active) {background-color: #ddd;}
+.pages {
+    width: 50%;
+    margin: 0 auto;
+    height: 50px;
+    border: none;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
+.pages span.selected {
+    color: #FFF;
+    background-color: orange;
+}
