@@ -1,21 +1,21 @@
-//Variable declarations
-var id = 'd3189e57';
-var key = 'b1b7b4a7ef79b0e69b697d36f0f7dc26';
+import * as importData from './modules.js';
+const {id, key, Product, Food} = importData;
 
-var recipesList = document.querySelector('#recipes');
-var searchFood = document.querySelector(".keyword-input");
-var searchButton = document.querySelector(".search-button");
-var diet = document.querySelector(".diet");
-var health = document.querySelector(".health");
-var calMax = document.querySelectorAll(".calories")[1];
-var calMin = document.querySelectorAll(".calories")[0];
 
-var foodValue, calMaxValue, calMinValue;
-var dietValue = '', healthValue = '';
+const recipesList = document.querySelector('#recipes');
+const searchFood = document.querySelector(".keyword-input");
+const searchButton = document.querySelector(".search-button");
+const diet = document.querySelector(".diet");
+const health = document.querySelector(".health");
+const calMax = document.querySelectorAll(".calories")[1];
+const calMin = document.querySelectorAll(".calories")[0];
+
+let foodValue, calMaxValue, calMinValue;
+let dietValue = '', healthValue = '';
 
 
 //Functions
-function searchEnabled() {
+const searchEnabled = () => {
 	if (calMin.value === "" || calMax.value === "" || searchFood.value === "" || diet.value === "" || health.value === "") {
 		searchButton.setAttribute("disabled", true);
 	} else {
@@ -23,96 +23,83 @@ function searchEnabled() {
 	};
 };
 
-function getRecipes(foodValue, fromPage, toPage) {
-	var req = new XMLHttpRequest();
-	var caloriesValue = calMinValue + '-' + calMaxValue;
-	var url = 'https://api.edamam.com/search?q=' + foodValue + '&app_id=' + id + '&app_key=' +
-	key + '&from=' + fromPage + '&to=' + toPage + '&diet=' + dietValue + '&health=' + healthValue + '&calories=' + caloriesValue;
+const getRecipes = (foodValue, fromPage, toPage) => {
+	let caloriesValue = calMinValue + '-' + calMaxValue;
+	let url = `https://api.edamam.com/search?q=${foodValue}&app_id=${id}&app_key=
+	${key}&from=${fromPage}&to=${toPage}&diet=${dietValue}&health=
+	${healthValue}&calories=${caloriesValue}`;
 
-	req.open('GET', url);
-	req.send();
-	req.onload = function(){
-		listRecipes(JSON.parse(req.responseText).hits);
-		var results = document.querySelector(".recipe-count-number");
-		results.textContent = JSON.parse(req.responseText).count;
-		var numPages = Math.ceil(JSON.parse(req.responseText).count/10);
+	fetch(url)
+	.then(response => {
+		return response.json();
+	})
+	.then(data => {
+		listRecipes(data.hits);
+		const results = document.querySelector(".recipe-count-number");
+		data.count === 0 ? alert("No results found") : results.textContent = data.count;
+		let numPages = Math.ceil(data.count/10);
 		numPages =  (numPages > 10) ? 10 : numPages;
 		pagination(fromPage / 10 + 1, numPages);
-	};
+	})
+	.catch(ex => {
+		alert(`Error ${ex}`);
+	})
 };
 
-function listRecipes(recipes) {
+const listRecipes = recipes => {
 	recipesList.innerHTML = "";
-	recipes.forEach(function(item) {
-		addRecipes(item.recipe);
+	recipes.forEach(item => {
+		let recipeFood = new Food(item.recipe);
+		recipeFood.appendToPage(recipesList);
+		document.getElementById("load").style.display = "none";
 	});
 }
 
-function addRecipes(recipeData) {
-	var recipeElement = document.createElement("div");
-	recipeElement.classList.add("recipe-element");
-
-	var img = '<img src="' + recipeData.image + '"/>';
-	var title = '<h3>' + recipeData.label + '</h3>';
-	var labels = '<div class="labels">';
-	var myLabels = recipeData.healthLabels;
-	myLabels.forEach(function(item) {
-		var label = '<div class="label">' + item + '</div>';
-		labels += label;
-	})
-
-	labels = labels + '</div>';
-	var calories = '<div class="calories">' +  Math.round(recipeData.calories / recipeData.yield) + '</div>';
-	recipeElement.innerHTML = img + title + labels + calories;
-	recipesList.appendChild(recipeElement);
-	document.getElementById("load").style.display = "none";
-};
-
 //Pagination
-function pagination(currentPage, lastPage) {
-	var lstPages = [];
+const pagination = (currentPage, lastPage) => {
+	const lstPages = [];
 
-	var range = (lastPage <= 7) ? lastPage : 7;
-	var leftSide = (currentPage < 4) ? 1 : currentPage - 3;
-	var rightSide = (currentPage < 4) ? range : ((lastPage - currentPage < 3) ? lastPage : currentPage + 3);
+	let range = (lastPage <= 7) ? lastPage : 7;
+	let leftSide = (currentPage < 4) ? 1 : currentPage - 3;
+	const rightSide = (currentPage < 4) ? range : ((lastPage - currentPage < 3) ? lastPage : currentPage + 3);
 	range = rightSide - leftSide + 1;
-	for (var i = 0; i < range; i++) {
+	for (let i = 0; i < range; i++) {
 		lstPages[i] = leftSide++;
 	}
 	addPagination(lstPages, currentPage);
 	createArrows(currentPage, lastPage);
 }
 
-function addPagination(someArrayOfPages, currentPage) {
-	var paginationContainer = document.querySelector(".pagination");
+const addPagination = (someArrayOfPages, currentPage) => {
+	const paginationContainer = document.querySelector(".pagination");
 	paginationContainer.innerHTML = "";
-	var listPages = document.createElement("div");
+	const listPages = document.createElement("div");
 	listPages.classList.add("pages");
 	paginationContainer.appendChild(listPages);
 
-	for (var i = 0; i < someArrayOfPages.length; i++) {
-		var pageMarker = document.createElement("span");
+	for (let i = 0; i < someArrayOfPages.length; i++) {
+		const pageMarker = document.createElement("span");
 		pageMarker.textContent = someArrayOfPages[i];
 		(someArrayOfPages[i] === currentPage) ?	pageMarker.classList.add("selected") : {};
 		listPages.appendChild(pageMarker);
 	}
-	var pageMarkers = document.querySelectorAll(".pages span");
-	pageMarkers.forEach(function(elem) {
-		elem.addEventListener("click",
-		function() {getRecipes(foodValue,
+	const pageMarkers = document.querySelectorAll(".pages span");
+	pageMarkers.forEach(elem => {
+		elem.addEventListener("click", () => {
+			getRecipes(foodValue,
 			(elem.textContent - 1) * 10, elem.textContent * 10)
 		})
 	});
 }
 
-function createArrows(myCurrentPage, myLastPage) {
-	var previousPage = createArrow("previous-page");
-	var firstPage = createArrow("first-page");
-	var nextPage = createArrow("next-page");
-	var lastPage = createArrow("last-page");
+const createArrows = (myCurrentPage, myLastPage) => {
+	let previousPage = createArrow("previous-page");
+	let firstPage = createArrow("first-page");
+	let nextPage = createArrow("next-page");
+	let lastPage = createArrow("last-page");
 
-	var previous = myCurrentPage === 1 ? 1 : myCurrentPage - 1;
-	var next = myCurrentPage === myLastPage ? myCurrentPage : myCurrentPage + 1;
+	const previous = myCurrentPage === 1 ? 1 : myCurrentPage - 1;
+	const next = myCurrentPage === myLastPage ? myCurrentPage : myCurrentPage + 1;
 
 	addListener(firstPage, 1);
 	addListener(lastPage, myLastPage);
@@ -120,16 +107,16 @@ function createArrows(myCurrentPage, myLastPage) {
 	addListener(nextPage, next);
 }
 
-function addListener(elem, numPages) {
-	elem.addEventListener("click", function() {
+const addListener = (elem, numPages) => {
+	elem.addEventListener("click", () => {
 		getRecipes(foodValue, (numPages - 1) * 10, numPages * 10);
 	});
 }
 
-function createArrow(pageType) {
-	var paginationContainer = document.querySelector(".pagination");
-	var arrowDiv = document.createElement("div");
-	var arrowMarker = document.createElement("span");
+const createArrow = pageType => {
+	const paginationContainer = document.querySelector(".pagination");
+	const arrowDiv = document.createElement("div");
+	const arrowMarker = document.createElement("span");
 	arrowDiv.classList.add(pageType);
 	arrowDiv.appendChild(arrowMarker);
 
@@ -160,32 +147,32 @@ function createArrow(pageType) {
 }
 
 //Events
-searchFood.addEventListener('keyup', function() {
+searchFood.addEventListener('keyup', () => {
 	foodValue = searchFood.value;
 	searchEnabled();
 })
 
-diet.addEventListener('change', function() {
+diet.addEventListener('change', () => {
 	dietValue = diet.value;
 	searchEnabled();
 })
 
-health.addEventListener('change', function() {
+health.addEventListener('change', () => {
 	healthValue = health.value;
 	searchEnabled();
 })
 
-calMax.addEventListener('keyup', function() {
+calMax.addEventListener('keyup', () => {
 	calMaxValue = calMax.value;
 	searchEnabled();
 })
 
-calMin.addEventListener('keyup', function() {
+calMin.addEventListener('keyup', () => {
 	calMinValue = calMin.value;
 	searchEnabled();
 })
 
-searchButton.addEventListener("click", function() {
+searchButton.addEventListener("click", () => {
 	recipesList.innerHTML = '';
 	document.getElementById("load").style.display = "block";
 	getRecipes(foodValue, 0, 10);
